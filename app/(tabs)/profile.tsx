@@ -1,123 +1,83 @@
-import {
-    StyleSheet,
-    Image,
-    Platform,
-    TextInput,
-    TouchableOpacity,
-    Text,
-} from "react-native";
-
-import { Collapsible } from "@/components/Collapsible";
-import { ExternalLink } from "@/components/ExternalLink";
+import { StyleSheet, Image, TouchableOpacity, Text, View } from "react-native";
+import { useSelector } from "react-redux";
+import { UserState } from "@/store/selectors";
+import { useRouter } from "expo-router";
 import ParallaxScrollView from "@/components/ParallaxScrollView";
 import { ThemedText } from "@/components/ThemedText";
-import { ThemedView } from "@/components/ThemedView";
-import { IconSymbol } from "@/components/ui/IconSymbol";
-import { BlurView } from "expo-blur";
-import { useDispatch, useSelector } from "react-redux";
-import { UserState } from "@/store/selectors";
+import { Colors } from "@/constants/Colors";
 import { Flexbox } from "@/components/Flexbox";
-import { Colors } from "react-native/Libraries/NewAppScreen";
-import { setUser } from "@/store/slices/userSlice";
-import { useRouter } from "expo-router";
-import { useState } from "react";
 
-export default function TabTwoScreen() {
+export default function ProfileScreen() {
     const user = useSelector(UserState);
-
-    const dispatch = useDispatch();
     const router = useRouter();
-
-    const [email, setEmail] = useState(user.email || "");
-    const [username, setUsername] = useState(user.name || "");
-    const [password, setPassword] = useState(user.password || "");
-
-    const handleChange = () => {
-        dispatch(setUser({ email, name: username, id: user.id, password }));
-    };
 
     return (
         <ParallaxScrollView
             headerBackgroundColor={{ light: "#D0D0D0", dark: "#353636" }}
-            headerImage={<Image source={require("@/assets/images/bg.png")} />}
+            // headerImage={<Image source={require("@/assets/images/bg.png")} />}
+            headerImage={
+                <Flexbox
+                    justify="center"
+                    align="center"
+                    style={styles.avatarContainer}
+                >
+                    <Image
+                        source={
+                            user.avatar
+                                ? { uri: user.avatar }
+                                : require("@/assets/images/boy.png")
+                        }
+                        style={styles.avatar}
+                    />
+                </Flexbox>
+            }
         >
-            <ThemedView style={styles.titleContainer}>
-                <ThemedText type="title">{user.name}</ThemedText>
-            </ThemedView>
-            <Flexbox>
-                <TextInput
-                    style={styles.input}
-                    placeholder="Логин"
-                    placeholderTextColor={Colors.light.text}
-                    value={username}
-                    onChangeText={setUsername}
-                />
-                <TextInput
-                    style={styles.input}
-                    placeholder="Email"
-                    placeholderTextColor={Colors.light.text}
-                    keyboardType="email-address"
-                    autoCapitalize="none"
-                    value={email}
-                    onChangeText={setEmail}
-                />
-                {/* <TextInput
-                    style={styles.input}
-                    placeholder="Пароль"
-                    placeholderTextColor={Colors.light.text}
-                    secureTextEntry
-                    value={password}
-                    onChangeText={setPassword}
+            <View style={styles.container}>
+                {/* <Image
+                    source={
+                        user.avatar
+                            ? { uri: user.avatar }
+                            : require("@/assets/images/boy.png")
+                    }
+                    style={styles.avatar}
                 /> */}
+                <ThemedText type="title" style={styles.username}>
+                    {user.name || "Имя не указано"}
+                </ThemedText>
 
-                <TouchableOpacity style={styles.button} onPress={handleChange}>
-                    <Text style={styles.buttonText}>Сохранить</Text>
+                <TouchableOpacity
+                    style={styles.button}
+                    onPress={() => router.replace("/(settings)/settings")}
+                >
+                    <Text style={styles.buttonText}>Настройки</Text>
                 </TouchableOpacity>
-            </Flexbox>
+
+                <TouchableOpacity
+                    style={[styles.button, styles.telegramButton]}
+                    onPress={() => alert("Подключение Telegram в разработке")}
+                >
+                    <Text style={styles.buttonText}>Подключить Telegram</Text>
+                </TouchableOpacity>
+            </View>
         </ParallaxScrollView>
     );
 }
 
 const styles = StyleSheet.create({
-    headerImage: {
-        color: "#808080",
-        position: "absolute",
-    },
-    titleContainer: {
-        flexDirection: "row",
-        gap: 8,
-    },
-    logo: {
-        height: 300,
-        width: "100%",
-    },
     container: {
-        flex: 1,
-    },
-    background: {
-        flex: 1,
-        width: "100%",
-        height: "100%",
-    },
-    blurContainer: {
-        flex: 1,
-        justifyContent: "center",
         alignItems: "center",
-        paddingHorizontal: 20,
+        padding: 20,
     },
-    title: {
-        fontSize: 32,
-        marginBottom: 20,
-        color: Colors.dark.default,
-        fontWeight: "700",
-    },
-    input: {
-        width: "90%",
-        padding: 15,
-        borderRadius: 10,
-        backgroundColor: "rgba(255, 255, 255, 0.8)",
+    avatar: {
+        width: 170,
+        height: 170,
+        borderRadius: 60,
         marginBottom: 15,
-        fontSize: 16,
+    },
+    username: {
+        fontSize: 22,
+        fontWeight: "bold",
+        marginBottom: 20,
     },
     button: {
         padding: 15,
@@ -125,10 +85,17 @@ const styles = StyleSheet.create({
         backgroundColor: Colors.light.default,
         alignItems: "center",
         width: "90%",
+        marginVertical: 10,
     },
     buttonText: {
         color: "white",
         fontSize: 18,
         fontWeight: "bold",
+    },
+    telegramButton: {
+        backgroundColor: "#0088CC",
+    },
+    avatarContainer: {
+        marginTop: 70,
     },
 });

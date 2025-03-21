@@ -1,8 +1,13 @@
+import { useRouter } from "expo-router";
 import { Flexbox } from "./Flexbox";
 import { HomeButton } from "./HomeButton/HomeButton";
 import { ThemedView } from "./ThemedView";
 
 export const HomeNavigation = () => {
+    const router = useRouter();
+
+    const goTravelScreen = () => router.replace("/(travels)/travels");
+
     return (
         <ThemedView>
             <Flexbox justify="space-between" gap={70} style={{ marginTop: 20 }}>
@@ -15,6 +20,7 @@ export const HomeNavigation = () => {
                     <HomeButton
                         title="Поездки"
                         image={require("@/assets/images/icons/drive.png")}
+                        onPress={goTravelScreen}
                     />
                     <HomeButton
                         title="События"
