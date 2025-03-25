@@ -1,20 +1,32 @@
 import { StyleSheet, Image, TouchableOpacity, Text, View } from "react-native";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { UserState } from "@/store/selectors";
 import { useRouter } from "expo-router";
 import ParallaxScrollView from "@/components/ParallaxScrollView";
 import { ThemedText } from "@/components/ThemedText";
 import { Colors } from "@/constants/Colors";
 import { Flexbox } from "@/components/Flexbox";
+import { setUser } from "@/store/slices/userSlice";
 
 export default function ProfileScreen() {
+    const dispatch = useDispatch();
     const user = useSelector(UserState);
     const router = useRouter();
+
+    const logoutHandler = async () => {
+        await dispatch(
+            setUser({
+                name: null,
+                id: null,
+                email: null,
+            })
+        );
+        await router.replace("/");
+    };
 
     return (
         <ParallaxScrollView
             headerBackgroundColor={{ light: "#D0D0D0", dark: "#353636" }}
-            // headerImage={<Image source={require("@/assets/images/bg.png")} />}
             headerImage={
                 <Flexbox
                     justify="center"
@@ -33,14 +45,6 @@ export default function ProfileScreen() {
             }
         >
             <View style={styles.container}>
-                {/* <Image
-                    source={
-                        user.avatar
-                            ? { uri: user.avatar }
-                            : require("@/assets/images/boy.png")
-                    }
-                    style={styles.avatar}
-                /> */}
                 <ThemedText type="title" style={styles.username}>
                     {user.name || "Имя не указано"}
                 </ThemedText>
@@ -57,6 +61,24 @@ export default function ProfileScreen() {
                     onPress={() => alert("Подключение Telegram в разработке")}
                 >
                     <Text style={styles.buttonText}>Подключить Telegram</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                    style={[styles.button]}
+                    onPress={() =>
+                        alert(
+                            `"Соседи" - приложение для развития и укрепления взаимоотношений с людьми, которые живут рядом`
+                        )
+                    }
+                >
+                    <Text style={styles.buttonText}>О приложении</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                    style={[styles.button, styles.logout]}
+                    onPress={logoutHandler}
+                >
+                    <Text style={styles.buttonText}>Выход</Text>
                 </TouchableOpacity>
             </View>
         </ParallaxScrollView>
@@ -80,12 +102,15 @@ const styles = StyleSheet.create({
         marginBottom: 20,
     },
     button: {
-        padding: 15,
+        padding: 20,
         borderRadius: 10,
         backgroundColor: Colors.light.default,
         alignItems: "center",
         width: "90%",
         marginVertical: 10,
+    },
+    logout: {
+        backgroundColor: "orange",
     },
     buttonText: {
         color: "white",

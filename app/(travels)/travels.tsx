@@ -1,13 +1,33 @@
-import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import {
+    View,
+    Text,
+    TouchableOpacity,
+    StyleSheet,
+    FlatList,
+    ActivityIndicator,
+} from "react-native";
 import { useRouter } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
-import { Flexbox } from "@/components/Flexbox";
+import { useEffect, useState } from "react";
 import { Colors } from "@/constants/Colors";
+import { ALL_TRAVELS, ITravel } from "@/api/data/travels";
+import { TravelCard } from "@/components/TravelCard/TravelCard";
 
 export default function TravelScreen() {
     const router = useRouter();
+    const [travels, setTravels] = useState<ITravel[]>([]);
+    const [loading, setLoading] = useState<boolean>(true);
 
-    const goTravelMakeScreen = () => router.replace("/(travels)/makeTravel");
+    useEffect(() => {
+        setTimeout(() => {
+            fetchTravels();
+        }, 1500);
+    }, []);
+
+    const fetchTravels = async () => {
+        setTravels(ALL_TRAVELS);
+        setLoading(false);
+    };
 
     return (
         <View style={styles.container}>
@@ -17,15 +37,24 @@ export default function TravelScreen() {
             >
                 <Ionicons name="arrow-back" size={24} color="black" />
             </TouchableOpacity>
-            <Text style={styles.title}>Поездки</Text>
-            <Flexbox gap={12} justify="center" align="center">
-                <TouchableOpacity
-                    style={styles.button}
-                    onPress={goTravelMakeScreen}
-                >
-                    <Text style={styles.buttonText}>Создать поездку</Text>
-                </TouchableOpacity>
-            </Flexbox>
+            <Text style={styles.title}>Совместные поездки</Text>
+
+            {loading ? (
+                <ActivityIndicator size="large" color={Colors.light.default} />
+            ) : (
+                <FlatList
+                    data={travels}
+                    keyExtractor={(item) => item.id.toString()}
+                    renderItem={({ item }) => <TravelCard data={item} />}
+                />
+            )}
+
+            <TouchableOpacity
+                style={styles.button}
+                onPress={() => router.replace("/(travels)/makeTravel")}
+            >
+                <Text style={styles.buttonText}>Создать поездку</Text>
+            </TouchableOpacity>
         </View>
     );
 }
@@ -41,33 +70,20 @@ const styles = StyleSheet.create({
         top: 50,
         left: 20,
     },
-    avatar: {
-        width: 100,
-        height: 100,
-        borderRadius: 50,
-        marginBottom: 20,
-    },
     title: {
         fontSize: 24,
         fontWeight: "bold",
         textAlign: "center",
-        marginVertical: 60,
+        marginTop: 60,
+        marginBottom: 30,
     },
-    input: {
-        width: "100%",
-        padding: 15,
-        borderRadius: 10,
-        backgroundColor: "#f0f0f0",
-        marginBottom: 15,
-        fontSize: 16,
-        height: 60,
-    },
+
     button: {
         padding: 15,
         borderRadius: 10,
         backgroundColor: Colors.light.default,
         alignItems: "center",
-        width: "100%",
+        marginTop: 20,
     },
     buttonText: {
         color: "white",

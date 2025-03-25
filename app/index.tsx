@@ -20,7 +20,6 @@ const AuthScreen: React.FC = () => {
     const user = useSelector(UserState);
     const router = useRouter();
 
-    // Если пользователь уже авторизован, перенаправляем в приложение
     useEffect(() => {
         if (user.id) {
             router.replace("/(tabs)/home");
@@ -31,11 +30,11 @@ const AuthScreen: React.FC = () => {
         dispatch(
             setUser({ id: "123", name: "Гость", email: "", isGuest: true })
         );
-        router.replace("/(tabs)/home"); // Перенаправляем после входа
+        router.replace("/(tabs)/home");
     };
 
     const navigateToRegister = () => {
-        router.push("/register"); // Исправленный переход на регистрацию
+        router.push("/register");
     };
 
     return (

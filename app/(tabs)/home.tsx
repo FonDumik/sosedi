@@ -3,8 +3,6 @@ import { Image, StyleSheet } from "react-native";
 import ParallaxScrollView from "@/components/ParallaxScrollView";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
-import { Flexbox } from "@/components/Flexbox";
-import { HomeButton } from "@/components/HomeButton/HomeButton";
 import { HomeNavigation } from "@/components/HomeNavigation";
 
 export default function HomeScreen() {
