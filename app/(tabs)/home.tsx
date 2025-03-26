@@ -1,9 +1,11 @@
-import { Image, StyleSheet } from "react-native";
+import { Image, ScrollView, StyleSheet } from "react-native";
 
 import ParallaxScrollView from "@/components/ParallaxScrollView";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 import { HomeNavigation } from "@/components/HomeNavigation";
+import { PostsFeed } from "@/components/PostsFeed";
+import { Flexbox } from "@/components/Flexbox";
 
 export default function HomeScreen() {
     return (
@@ -16,12 +18,21 @@ export default function HomeScreen() {
                 />
             }
         >
-            <ThemedView style={styles.titleContainer}>
-                <ThemedText type="subtitle">
-                    Добро пожаловать в "Соседи"!
-                </ThemedText>
-            </ThemedView>
-            <HomeNavigation />
+            <ScrollView>
+                <Flexbox gap={60}>
+                    <ThemedView style={styles.stepContainer}>
+                        <ThemedText type="subtitle">
+                            Добро пожаловать в "Соседи"!
+                        </ThemedText>
+                        <HomeNavigation />
+                    </ThemedView>
+
+                    <ThemedView style={styles.stepContainer}>
+                        <ThemedText type="subtitle">Лента постов:</ThemedText>
+                        <PostsFeed />
+                    </ThemedView>
+                </Flexbox>
+            </ScrollView>
         </ParallaxScrollView>
     );
 }

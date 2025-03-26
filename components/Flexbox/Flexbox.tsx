@@ -1,18 +1,31 @@
 import { FC, ReactNode } from "react";
-import { GestureResponderEvent, Pressable, View } from "react-native";
+import {
+    GestureResponderEvent,
+    Pressable,
+    View,
+    StyleProp,
+    ViewStyle,
+    DimensionValue,
+} from "react-native";
 
 interface IProps {
     children: ReactNode;
     gap?: number;
-    width?: number | string;
-    direction?: string;
-    align?: string;
-    wrap?: string;
-    justify?: string;
-    style?: any;
-    padding?: string;
-    margin?: string;
-    flex?: string;
+    width?: DimensionValue;
+    direction?: "row" | "column" | "row-reverse" | "column-reverse";
+    align?: "flex-start" | "flex-end" | "center" | "stretch" | "baseline";
+    wrap?: "wrap" | "nowrap" | "wrap-reverse";
+    justify?:
+        | "flex-start"
+        | "flex-end"
+        | "center"
+        | "space-between"
+        | "space-around"
+        | "space-evenly";
+    style?: StyleProp<ViewStyle>;
+    padding?: number;
+    margin?: number;
+    flex?: number;
     className?: string;
     onClick?: ((event: GestureResponderEvent) => void) | null | undefined;
 }
@@ -22,17 +35,17 @@ export const Flexbox: FC<IProps> = ({
     direction = "column",
     align = "stretch",
     justify = "flex-start",
-    flex = "",
+    flex,
     children,
     width = "auto",
     wrap = "nowrap",
     style,
     className,
-    margin = "",
-    padding = "",
+    margin,
+    padding,
     onClick,
 }) => {
-    const flexStyles = {
+    const flexStyles: ViewStyle = {
         display: "flex",
         gap,
         flex,
@@ -48,8 +61,7 @@ export const Flexbox: FC<IProps> = ({
     return (
         <Pressable
             onPress={onClick}
-            style={{ ...flexStyles, ...style }}
-            className={className}
+            style={[flexStyles, style]} // Используем массив для объединения стилей
         >
             {children}
         </Pressable>
