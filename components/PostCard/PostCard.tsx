@@ -5,6 +5,8 @@ import {
     StyleSheet,
     Image,
     TouchableWithoutFeedback,
+    TouchableHighlight,
+    TouchableNativeFeedback,
 } from "react-native";
 import { formatDistanceToNow } from "date-fns";
 import { ru } from "date-fns/locale";
@@ -22,63 +24,44 @@ interface PostCardProps {
 
 export const PostCard: React.FC<PostCardProps> = ({ data }) => {
     const router = useRouter();
-    const [expanded, setExpanded] = useState(false);
-
-    const scale = useSharedValue(1);
-    const height = useSharedValue(150);
-
-    const animatedStyle = useAnimatedStyle(() => ({
-        transform: [{ scale: scale.value }],
-        height: height.value,
-    }));
 
     const handlePress = () => {
-        if (expanded) {
-            scale.value = withTiming(1, { duration: 300 });
-            height.value = withTiming(150, { duration: 300 });
-        } else {
-            scale.value = withTiming(1.05, { duration: 300 });
-            height.value = withTiming(300, { duration: 300 });
-            setTimeout(() => router.push(`/(posts)/post?id=${data.id}`), 300);
-        }
-        setExpanded(!expanded);
+        router.push(`/(posts)/post?id=${data.id}`);
     };
 
     return (
-        <TouchableWithoutFeedback onPress={handlePress}>
-            <Animated.View style={[styles.card, animatedStyle]}>
-                <View style={styles.card}>
-                    <View style={styles.header}>
-                        <Image
-                            source={{ uri: data.authorAvatar }}
-                            style={styles.avatar}
-                        />
-                        <View>
-                            <Text style={styles.author}>{data.authorName}</Text>
-                            <Text style={styles.date}>
-                                {formatDistanceToNow(new Date(data.createdAt), {
-                                    addSuffix: true,
-                                    locale: ru,
-                                })}
-                            </Text>
-                        </View>
-                    </View>
-                    <Text style={styles.content}>{data.content}</Text>
-                    {data.image && (
-                        <Image
-                            source={{ uri: data.image }}
-                            style={styles.postImage}
-                        />
-                    )}
-                    <View style={styles.footer}>
-                        <Text style={styles.likes}>❤️ {data.likes}</Text>
-                        <Text style={styles.comments}>
-                            💬 {data.commentsCount} комментариев
+        <TouchableNativeFeedback onPress={handlePress}>
+            <View style={styles.card}>
+                <View style={styles.header}>
+                    <Image
+                        source={{ uri: data.authorAvatar }}
+                        style={styles.avatar}
+                    />
+                    <View>
+                        <Text style={styles.author}>{data.authorName}</Text>
+                        <Text style={styles.date}>
+                            {formatDistanceToNow(new Date(data.createdAt), {
+                                addSuffix: true,
+                                locale: ru,
+                            })}
                         </Text>
                     </View>
                 </View>
-            </Animated.View>
-        </TouchableWithoutFeedback>
+                <Text style={styles.content}>{data.content}</Text>
+                {data.image && (
+                    <Image
+                        source={{ uri: data.image }}
+                        style={styles.postImage}
+                    />
+                )}
+                <View style={styles.footer}>
+                    <Text style={styles.likes}>❤️ {data.likes}</Text>
+                    <Text style={styles.comments}>
+                        💬 {data.commentsCount} комментариев
+                    </Text>
+                </View>
+            </View>
+        </TouchableNativeFeedback>
     );
 };
 

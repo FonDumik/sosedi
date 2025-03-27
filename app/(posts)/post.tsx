@@ -11,6 +11,8 @@ import { Ionicons } from "@expo/vector-icons";
 import { useEffect, useState } from "react";
 import { ALL_POSTS, IUserPost } from "@/api/data/posts";
 import * as Crypto from "expo-crypto";
+import { Flexbox } from "@/components/Flexbox";
+import { ThemedText } from "@/components/ThemedText";
 
 interface IPost {
     id: string;
@@ -33,29 +35,41 @@ export default function PostScreen() {
     if (!post) return <Text>Загрузка...</Text>;
 
     return (
-        <ScrollView style={styles.container}>
+        <View style={styles.container}>
             <TouchableOpacity
-                onPress={() => router.back()}
+                onPress={() => router.replace("/(tabs)/home")}
                 style={styles.backButton}
             >
-                <Ionicons name="arrow-back" size={24} color="black" />
+                <Ionicons name="arrow-back" size={34} color="black" />
             </TouchableOpacity>
-            <Text style={styles.title}>{post.content}</Text>
-            <Text style={styles.author}>Автор: {post.authorName}</Text>
-            <Text style={styles.date}>
-                {new Date(post.createdAt).toLocaleString()}
-            </Text>
+            <Flexbox style={{ marginTop: 80 }}>
+                <ThemedText style={styles.title}>{post.content}</ThemedText>
+                <Text style={styles.author}>Автор: {post.authorName}</Text>
+                <Text style={styles.date}>
+                    {new Date(post.createdAt).toLocaleString()}
+                </Text>
 
-            {post.image && (
-                <Image
-                    key={Crypto.randomUUID()}
-                    source={{ uri: post.image }}
-                    style={styles.image}
-                />
-            )}
+                <View style={styles.footer}>
+                    <Text style={styles.likes}>❤️ {post.likes}</Text>
+                    <Text style={styles.comments}>
+                        💬 {post.commentsCount} комментариев
+                    </Text>
+                </View>
 
-            <Text style={styles.content}>{post.content}</Text>
-        </ScrollView>
+                {post.image && (
+                    <Image
+                        key={Crypto.randomUUID()}
+                        source={{ uri: post.image }}
+                        style={styles.image}
+                    />
+                )}
+
+                <Flexbox gap={16} style={{ marginTop: 30 }}>
+                    <ThemedText type="subtitle">Комментарии:</ThemedText>
+                    <ThemedText>Комментариев нет</ThemedText>
+                </Flexbox>
+            </Flexbox>
+        </View>
     );
 }
 
@@ -93,5 +107,18 @@ const styles = StyleSheet.create({
     content: {
         fontSize: 16,
         color: "#333",
+    },
+    footer: {
+        flexDirection: "row",
+        justifyContent: "space-between",
+        marginTop: 10,
+    },
+    likes: {
+        fontSize: 14,
+        color: "#e74c3c",
+    },
+    comments: {
+        fontSize: 14,
+        color: "#3498db",
     },
 });
