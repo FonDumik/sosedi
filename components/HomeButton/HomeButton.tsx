@@ -1,4 +1,6 @@
 import { Colors } from "@/constants/Colors";
+import { useThemeColor } from "@/hooks/useThemeColor";
+import { ThemeState } from "@/store/selectors";
 import React, { FC } from "react";
 import {
     StyleSheet,
@@ -8,6 +10,7 @@ import {
     ImageSourcePropType,
     GestureResponderEvent,
 } from "react-native";
+import { useSelector } from "react-redux";
 
 interface IProps {
     title: string;
@@ -15,6 +18,8 @@ interface IProps {
     onPress?: (event: GestureResponderEvent) => void;
 }
 export const HomeButton: FC<IProps> = ({ onPress, title, image }) => {
+    const { colors } = useSelector(ThemeState);
+
     const [isPressed, setIsPressed] = React.useState(false);
 
     const handlePressIn = () => {
@@ -27,13 +32,17 @@ export const HomeButton: FC<IProps> = ({ onPress, title, image }) => {
 
     return (
         <TouchableOpacity
-            style={[styles.container, isPressed && styles.pressed]}
+            style={[
+                { backgroundColor: colors.backgroundSecondary },
+                styles.container,
+                isPressed && styles.pressed,
+            ]}
             onPress={onPress}
             onPressIn={handlePressIn}
             onPressOut={handlePressOut}
         >
             <Image source={image} style={styles.image} />
-            <Text style={styles.title}>{title}</Text>
+            <Text style={[styles.title, { color: colors.text }]}>{title}</Text>
         </TouchableOpacity>
     );
 };
@@ -44,7 +53,6 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         padding: 16,
         borderRadius: 16,
-        backgroundColor: "#fff",
         elevation: 4,
         shadowColor: "#000",
         shadowOffset: { width: 0, height: 2 },
@@ -63,7 +71,7 @@ const styles = StyleSheet.create({
         overflow: "visible",
     },
     title: {
-        fontSize: 16,
+        fontSize: 20,
         fontWeight: "bold",
         marginTop: 20,
     },

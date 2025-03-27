@@ -101,14 +101,14 @@ const styles = StyleSheet.create({
         paddingHorizontal: 20,
     },
     title: {
-        fontSize: 32,
+        fontSize: 48,
         marginBottom: 20,
-        color: Colors.dark.default,
+        color: Colors.dark.primary,
         fontWeight: "700",
     },
     input: {
         width: "90%",
-        padding: 15,
+        padding: 20,
         borderRadius: 10,
         backgroundColor: "rgba(255, 255, 255, 0.8)",
         marginBottom: 15,
@@ -117,7 +117,7 @@ const styles = StyleSheet.create({
     button: {
         padding: 15,
         borderRadius: 10,
-        backgroundColor: Colors.light.default,
+        backgroundColor: Colors.light.primaryDark,
         alignItems: "center",
         width: "90%",
     },

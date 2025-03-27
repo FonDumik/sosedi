@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import {
     View,
-    Text,
     StyleSheet,
     Image,
     TouchableWithoutFeedback,
@@ -17,6 +16,9 @@ import Animated, {
     withTiming,
 } from "react-native-reanimated";
 import { useRouter } from "expo-router";
+import { ThemedText } from "../ThemedText";
+import { useSelector } from "react-redux";
+import { ThemeState } from "@/store/selectors";
 
 interface PostCardProps {
     data: IUserPost;
@@ -24,6 +26,7 @@ interface PostCardProps {
 
 export const PostCard: React.FC<PostCardProps> = ({ data }) => {
     const router = useRouter();
+    const styles = useStyles();
 
     const handlePress = () => {
         router.push(`/(posts)/post?id=${data.id}`);
@@ -38,16 +41,18 @@ export const PostCard: React.FC<PostCardProps> = ({ data }) => {
                         style={styles.avatar}
                     />
                     <View>
-                        <Text style={styles.author}>{data.authorName}</Text>
-                        <Text style={styles.date}>
+                        <ThemedText style={styles.author}>
+                            {data.authorName}
+                        </ThemedText>
+                        <ThemedText style={styles.date}>
                             {formatDistanceToNow(new Date(data.createdAt), {
                                 addSuffix: true,
                                 locale: ru,
                             })}
-                        </Text>
+                        </ThemedText>
                     </View>
                 </View>
-                <Text style={styles.content}>{data.content}</Text>
+                <ThemedText style={styles.content}>{data.content}</ThemedText>
                 {data.image && (
                     <Image
                         source={{ uri: data.image }}
@@ -55,73 +60,76 @@ export const PostCard: React.FC<PostCardProps> = ({ data }) => {
                     />
                 )}
                 <View style={styles.footer}>
-                    <Text style={styles.likes}>❤️ {data.likes}</Text>
-                    <Text style={styles.comments}>
+                    <ThemedText style={styles.likes}>
+                        ❤️ {data.likes}
+                    </ThemedText>
+                    <ThemedText style={styles.comments}>
                         💬 {data.commentsCount} комментариев
-                    </Text>
+                    </ThemedText>
                 </View>
             </View>
         </TouchableNativeFeedback>
     );
 };
 
-const styles = StyleSheet.create({
-    card: {
-        backgroundColor: "#fff",
-        borderRadius: 12,
-        padding: 15,
-        marginBottom: 15,
-        shadowColor: "#000",
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.1,
-        shadowRadius: 4,
-        elevation: 3,
-    },
-    header: {
-        flexDirection: "row",
-        alignItems: "center",
-        marginBottom: 10,
-    },
-    avatar: {
-        width: 40,
-        height: 40,
-        borderRadius: 20,
-        marginRight: 10,
-        objectFit: "contain",
-        backgroundColor: "#eee",
-    },
-    author: {
-        fontSize: 16,
-        fontWeight: "bold",
-        color: "#333",
-    },
-    date: {
-        fontSize: 12,
-        color: "#666",
-    },
-    content: {
-        fontSize: 16,
-        color: "#333",
-        marginBottom: 10,
-    },
-    postImage: {
-        width: "100%",
-        height: 200,
-        borderRadius: 10,
-        marginBottom: 10,
-        backgroundColor: "#eee",
-    },
-    footer: {
-        flexDirection: "row",
-        justifyContent: "space-between",
-        marginTop: 10,
-    },
-    likes: {
-        fontSize: 14,
-        color: "#e74c3c",
-    },
-    comments: {
-        fontSize: 14,
-        color: "#3498db",
-    },
-});
+const useStyles = () => {
+    const { colors } = useSelector(ThemeState);
+
+    return StyleSheet.create({
+        card: {
+            backgroundColor: colors.backgroundSecondary,
+            borderRadius: 12,
+            padding: 15,
+            marginBottom: 15,
+            shadowColor: "#000",
+            shadowOffset: { width: 0, height: 2 },
+            shadowOpacity: 0.1,
+            shadowRadius: 4,
+            elevation: 3,
+        },
+        header: {
+            flexDirection: "row",
+            alignItems: "center",
+            marginBottom: 10,
+        },
+        avatar: {
+            width: 40,
+            height: 40,
+            borderRadius: 20,
+            marginRight: 10,
+            objectFit: "contain",
+            backgroundColor: colors.icon,
+        },
+        author: {
+            fontSize: 16,
+            fontWeight: "bold",
+        },
+        date: {
+            fontSize: 12,
+        },
+        content: {
+            fontSize: 16,
+            marginBottom: 10,
+        },
+        postImage: {
+            width: "100%",
+            height: 200,
+            borderRadius: 10,
+            marginBottom: 10,
+            backgroundColor: colors.icon,
+        },
+        footer: {
+            flexDirection: "row",
+            justifyContent: "space-between",
+            marginTop: 10,
+        },
+        likes: {
+            fontSize: 14,
+            color: colors.error,
+        },
+        comments: {
+            fontSize: 14,
+            color: colors.primary,
+        },
+    });
+};

@@ -1,4 +1,4 @@
-import { StyleSheet, Image, TouchableOpacity, Text, View } from "react-native";
+import { StyleSheet, Image, TouchableOpacity, View } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { UserState } from "@/store/selectors";
 import { useRouter } from "expo-router";
@@ -7,6 +7,8 @@ import { ThemedText } from "@/components/ThemedText";
 import { Colors } from "@/constants/Colors";
 import { Flexbox } from "@/components/Flexbox";
 import { setUser } from "@/store/slices/userSlice";
+import { ThemePicker } from "@/components/ThemePicker";
+import { ScreenContainer } from "@/components/ScreenContainer";
 
 export default function ProfileScreen() {
     const dispatch = useDispatch();
@@ -44,43 +46,55 @@ export default function ProfileScreen() {
                 </Flexbox>
             }
         >
-            <View style={styles.container}>
-                <ThemedText type="title" style={styles.username}>
-                    {user.name || "Имя не указано"}
-                </ThemedText>
+            <ScreenContainer>
+                <View style={styles.container}>
+                    <ThemedText type="title" style={styles.username}>
+                        {user.name || "Имя не указано"}
+                    </ThemedText>
 
-                <TouchableOpacity
-                    style={styles.button}
-                    onPress={() => router.replace("/(settings)/settings")}
-                >
-                    <Text style={styles.buttonText}>Настройки</Text>
-                </TouchableOpacity>
+                    <ThemePicker />
 
-                <TouchableOpacity
-                    style={[styles.button, styles.telegramButton]}
-                    onPress={() => alert("Подключение Telegram в разработке")}
-                >
-                    <Text style={styles.buttonText}>Подключить Telegram</Text>
-                </TouchableOpacity>
+                    <TouchableOpacity
+                        style={styles.button}
+                        onPress={() => router.replace("/(settings)/settings")}
+                    >
+                        <ThemedText style={styles.buttonText}>
+                            Настройки
+                        </ThemedText>
+                    </TouchableOpacity>
 
-                <TouchableOpacity
-                    style={[styles.button]}
-                    onPress={() =>
-                        alert(
-                            `"Соседи" - приложение для развития и укрепления взаимоотношений с людьми, которые живут рядом`
-                        )
-                    }
-                >
-                    <Text style={styles.buttonText}>О приложении</Text>
-                </TouchableOpacity>
+                    <TouchableOpacity
+                        style={[styles.button, styles.telegramButton]}
+                        onPress={() =>
+                            alert("Подключение Telegram в разработке")
+                        }
+                    >
+                        <ThemedText style={styles.buttonText}>
+                            Подключить Telegram
+                        </ThemedText>
+                    </TouchableOpacity>
 
-                <TouchableOpacity
-                    style={[styles.button, styles.logout]}
-                    onPress={logoutHandler}
-                >
-                    <Text style={styles.buttonText}>Выход</Text>
-                </TouchableOpacity>
-            </View>
+                    <TouchableOpacity
+                        style={[styles.button]}
+                        onPress={() =>
+                            alert(
+                                `"Соседи" - приложение для развития и укрепления взаимоотношений с людьми, которые живут рядом`
+                            )
+                        }
+                    >
+                        <ThemedText style={styles.buttonText}>
+                            О приложении
+                        </ThemedText>
+                    </TouchableOpacity>
+
+                    <TouchableOpacity
+                        style={[styles.button, styles.logout]}
+                        onPress={logoutHandler}
+                    >
+                        <ThemedText style={styles.buttonText}>Выход</ThemedText>
+                    </TouchableOpacity>
+                </View>
+            </ScreenContainer>
         </ParallaxScrollView>
     );
 }
@@ -104,13 +118,13 @@ const styles = StyleSheet.create({
     button: {
         padding: 20,
         borderRadius: 10,
-        backgroundColor: Colors.light.default,
+        backgroundColor: Colors.light.primaryDark,
         alignItems: "center",
         width: "90%",
         marginVertical: 10,
     },
     logout: {
-        backgroundColor: "orange",
+        backgroundColor: Colors.light.error,
     },
     buttonText: {
         color: "white",

@@ -84,9 +84,9 @@ const styles = StyleSheet.create({
         alignItems: "center",
     },
     title: {
-        fontSize: 72,
+        fontSize: 100,
         marginBottom: 20,
-        color: Colors.dark.default,
+        color: Colors.light.primaryLight,
         textAlign: "center",
         fontWeight: "700",
     },

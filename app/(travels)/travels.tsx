@@ -1,6 +1,5 @@
 import {
     View,
-    Text,
     TouchableOpacity,
     StyleSheet,
     FlatList,
@@ -12,6 +11,9 @@ import { useEffect, useState } from "react";
 import { Colors } from "@/constants/Colors";
 import { ALL_TRAVELS, ITravel } from "@/api/data/travels";
 import { TravelCard } from "@/components/TravelCard/TravelCard";
+import { ThemedText } from "@/components/ThemedText";
+import { BackButton } from "@/components/BackButton";
+import { ScreenContainer } from "@/components/ScreenContainer";
 
 export default function TravelScreen() {
     const router = useRouter();
@@ -30,32 +32,35 @@ export default function TravelScreen() {
     };
 
     return (
-        <View style={styles.container}>
-            <TouchableOpacity
-                onPress={() => router.replace("/(tabs)/home")}
-                style={styles.backButton}
-            >
-                <Ionicons name="arrow-back" size={24} color="black" />
-            </TouchableOpacity>
-            <Text style={styles.title}>Совместные поездки</Text>
+        <ScreenContainer>
+            <View style={styles.container}>
+                <BackButton onPress={() => router.replace("/(tabs)/home")} />
 
-            {loading ? (
-                <ActivityIndicator size="large" color={Colors.light.default} />
-            ) : (
-                <FlatList
-                    data={travels}
-                    keyExtractor={(item) => item.id.toString()}
-                    renderItem={({ item }) => <TravelCard data={item} />}
-                />
-            )}
+                <ThemedText style={styles.title}>Совместные поездки</ThemedText>
 
-            <TouchableOpacity
-                style={styles.button}
-                onPress={() => router.replace("/(travels)/makeTravel")}
-            >
-                <Text style={styles.buttonText}>Создать поездку</Text>
-            </TouchableOpacity>
-        </View>
+                {loading ? (
+                    <ActivityIndicator
+                        size="large"
+                        color={Colors.light.primary}
+                    />
+                ) : (
+                    <FlatList
+                        data={travels}
+                        keyExtractor={(item) => item.id.toString()}
+                        renderItem={({ item }) => <TravelCard data={item} />}
+                    />
+                )}
+
+                <TouchableOpacity
+                    style={styles.button}
+                    onPress={() => router.replace("/(travels)/makeTravel")}
+                >
+                    <ThemedText style={styles.buttonText}>
+                        Создать поездку
+                    </ThemedText>
+                </TouchableOpacity>
+            </View>
+        </ScreenContainer>
     );
 }
 
@@ -63,7 +68,6 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         padding: 20,
-        backgroundColor: "#fff",
     },
     backButton: {
         position: "absolute",
@@ -81,7 +85,6 @@ const styles = StyleSheet.create({
     button: {
         padding: 15,
         borderRadius: 10,
-        backgroundColor: Colors.light.default,
         alignItems: "center",
         marginTop: 20,
     },

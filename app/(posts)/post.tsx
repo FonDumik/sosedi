@@ -1,11 +1,4 @@
-import {
-    View,
-    Text,
-    Image,
-    StyleSheet,
-    ScrollView,
-    TouchableOpacity,
-} from "react-native";
+import { View, Image, StyleSheet, TouchableOpacity } from "react-native";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { useEffect, useState } from "react";
@@ -13,14 +6,8 @@ import { ALL_POSTS, IUserPost } from "@/api/data/posts";
 import * as Crypto from "expo-crypto";
 import { Flexbox } from "@/components/Flexbox";
 import { ThemedText } from "@/components/ThemedText";
-
-interface IPost {
-    id: string;
-    title: string;
-    content: string;
-    author: string;
-    createdAt: string;
-}
+import { ScreenContainer } from "@/components/ScreenContainer";
+import { BackButton } from "@/components/BackButton";
 
 export default function PostScreen() {
     const router = useRouter();
@@ -32,44 +19,45 @@ export default function PostScreen() {
         if (foundPost) setPost(foundPost);
     }, [id]);
 
-    if (!post) return <Text>Загрузка...</Text>;
+    if (!post) return <ThemedText>Загрузка...</ThemedText>;
 
     return (
-        <View style={styles.container}>
-            <TouchableOpacity
-                onPress={() => router.replace("/(tabs)/home")}
-                style={styles.backButton}
-            >
-                <Ionicons name="arrow-back" size={34} color="black" />
-            </TouchableOpacity>
-            <Flexbox style={{ marginTop: 80 }}>
-                <ThemedText style={styles.title}>{post.content}</ThemedText>
-                <Text style={styles.author}>Автор: {post.authorName}</Text>
-                <Text style={styles.date}>
-                    {new Date(post.createdAt).toLocaleString()}
-                </Text>
+        <ScreenContainer>
+            <View style={styles.container}>
+                <BackButton onPress={() => router.replace("/(tabs)/home")} />
+                <Flexbox style={{ marginTop: 80 }}>
+                    <ThemedText style={styles.title}>{post.content}</ThemedText>
+                    <ThemedText style={styles.author}>
+                        Автор: {post.authorName}
+                    </ThemedText>
+                    <ThemedText style={styles.date}>
+                        {new Date(post.createdAt).toLocaleString()}
+                    </ThemedText>
 
-                <View style={styles.footer}>
-                    <Text style={styles.likes}>❤️ {post.likes}</Text>
-                    <Text style={styles.comments}>
-                        💬 {post.commentsCount} комментариев
-                    </Text>
-                </View>
+                    <View style={styles.footer}>
+                        <ThemedText style={styles.likes}>
+                            ❤️ {post.likes}
+                        </ThemedText>
+                        <ThemedText style={styles.comments}>
+                            💬 {post.commentsCount} комментариев
+                        </ThemedText>
+                    </View>
 
-                {post.image && (
-                    <Image
-                        key={Crypto.randomUUID()}
-                        source={{ uri: post.image }}
-                        style={styles.image}
-                    />
-                )}
+                    {post.image && (
+                        <Image
+                            key={Crypto.randomUUID()}
+                            source={{ uri: post.image }}
+                            style={styles.image}
+                        />
+                    )}
 
-                <Flexbox gap={16} style={{ marginTop: 30 }}>
-                    <ThemedText type="subtitle">Комментарии:</ThemedText>
-                    <ThemedText>Комментариев нет</ThemedText>
+                    <Flexbox gap={16} style={{ marginTop: 30 }}>
+                        <ThemedText type="subtitle">Комментарии:</ThemedText>
+                        <ThemedText>Комментариев нет</ThemedText>
+                    </Flexbox>
                 </Flexbox>
-            </Flexbox>
-        </View>
+            </View>
+        </ScreenContainer>
     );
 }
 
@@ -77,13 +65,8 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         padding: 20,
-        backgroundColor: "#fff",
     },
-    backButton: {
-        position: "absolute",
-        top: 50,
-        left: 20,
-    },
+
     title: {
         fontSize: 24,
         fontWeight: "bold",
